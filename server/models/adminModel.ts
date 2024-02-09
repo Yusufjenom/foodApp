@@ -9,7 +9,8 @@ const adminSchema = new mongoose.Schema({
     },
     email:{
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password:{
         type: String,
@@ -26,6 +27,10 @@ const adminSchema = new mongoose.Schema({
         type: Number,
         required: true
     }
-});
+}, {timestamps: true, toJSON:{
+    transform(doc, ret){
+        delete ret.password
+    }
+}});
 
 export const AdminModel = mongoose.model<IAdminInput>('admin', adminSchema);
