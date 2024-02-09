@@ -1,5 +1,11 @@
-import express, {Request, Response, NextFunction} from 'express';
-import { createVendor, getVendorById, getVendors } from '../controllers/adminController';
+import express, { Request, Response, NextFunction } from 'express';
+import {
+    createAdmin,
+    createVendor,
+    getVendorById,
+    getVendors,
+    loginnAdmin
+} from '../controllers/adminController';
 
 const adminRouter = express.Router();
 
@@ -9,4 +15,8 @@ adminRouter.get('/vendors', getVendors);
 
 adminRouter.get('/vendor/:id', getVendorById);
 
-export {adminRouter as adminRoute};
+adminRouter.post('/admin', createAdmin);
+
+adminRouter.post('/admin-login', loginnAdmin);
+
+export { adminRouter as adminRoute };
