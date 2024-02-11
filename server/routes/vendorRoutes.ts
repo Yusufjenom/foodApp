@@ -1,5 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import {
+    createFood,
+    getFood,
     getVendorProfile,
     updateVVendorProfile,
     updateVeendorServvice,
@@ -19,5 +21,9 @@ vendorRouter.get('/profile', getVendorProfile);
 vendorRouter.patch('/profile', updateVVendorProfile);
 
 vendorRouter.patch('/service', updateVeendorServvice);
+
+vendorRouter.post('/food', createFood);
+
+vendorRouter.get('/foods', getFood);
 
 export { vendorRouter as vendorRoute };
