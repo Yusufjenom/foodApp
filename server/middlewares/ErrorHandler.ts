@@ -25,7 +25,12 @@ export const ErrorHandler = (error: Error, req: Request, res: Response, next: Ne
 
     let errors:IObject  = {email: "", password: ""}
     if(error instanceof HandleError){
-
+    //   if(error.message === "user not authorized"){
+    //     return res.status(401).json({
+    //         success: false,
+    //         message: error.message
+    //     })
+    //   }
     }
    return res.status(400).json({
     success: false,
