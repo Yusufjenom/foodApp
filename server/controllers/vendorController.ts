@@ -82,3 +82,11 @@ export const updateVeendorServvice = CatchErrorFunc(async (req:Request, res:Resp
    }
 
 });
+
+export const createFood = CatchErrorFunc(async (req:Request, res:Response) => {
+   
+});
+
+export const getFood = CatchErrorFunc(async (req: Request, res: Response) => {
+
+});
