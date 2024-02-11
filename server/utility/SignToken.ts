@@ -28,6 +28,7 @@ export async function VerifyToken(token: string) {
 
 export const validateToken = async (req:Request) => {
    const token = req.get('Authorization');
+   //console.log(token);
    if(token){
     const payload = await jwt.verify(token.split(' ')[1], "secret", ) as AuthPayload;
     req.user = payload;
