@@ -1,10 +1,13 @@
-const jwt = require('jsonwebtoken');
+import { VendorPayload } from "../dto/vendor.dto";
+import jwt from 'jsonwebtoken';
+import {Request, Response, NextFunction} from 'express'
+import { AuthPayload } from "../dto/auth.dto";
 
 const period: number = 60 * 60 * 24
 
-export async function SignToken(id: string) {
+export async function SignToken(payload: VendorPayload) {
     try {
-        const token = await jwt.sign({ id }, "secret", { expiresIn: period });
+        const token = await jwt.sign( payload , "secret", { expiresIn: period });
         return token;
     } catch (err: any) {
         return err.message;
@@ -22,3 +25,13 @@ export async function VerifyToken(token: string) {
     }
 
 };
+
+export const validateToken = async (req:Request) => {
+   const token = req.get('Authorization');
+   if(token){
+    const payload = await jwt.verify(token.split(' ')[1], "secret", ) as AuthPayload;
+    req.user = payload;
+    return true
+   }
+   return false;
+}
