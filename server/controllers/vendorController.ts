@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
 import { CatchErrorFunc } from '../utility/CatchErrorFunc';
-import { VendorLoginInput } from '../dto/vendor.dto';
+import { EditVendorInputs, VendorLoginInput } from '../dto/vendor.dto';
 import { VendorModel } from '../models/vendorModel';
 import { HandleError } from '../utility/error';
 import { ComfirmPassword } from '../utility/comfirmPassword';
@@ -35,6 +35,7 @@ export const vendorLogin = CatchErrorFunc(async (req: Request, res: Response) =>
 
 export const getVendorProfile = CatchErrorFunc(async (req:Request, res:Response) => {
     const user = req.user;
+    //console.log(user)
     if(user){
       const vendor = await VendorModel.findById(user._id)
       return res.status(200).json({
@@ -47,13 +48,37 @@ export const getVendorProfile = CatchErrorFunc(async (req:Request, res:Response)
 });
 
 export const updateVVendorProfile = CatchErrorFunc(async (req:Request, res:Response) => {
-    const {} = req.body;
+    const {name, phone, foodType, address} = <EditVendorInputs>req.body;
     const user = req.user;
     if(user){
-      const vendor = await VendorModel.findById(user._id)
+      const vendor = await VendorModel.findByIdAndUpdate(user._id, {
+         name, phone, foodType, address
+      });
+      return res.status(200).json({
+         success: true,
+         vendor
+      })
+    }else{
+      throw new HandleError("vendor details not found");
     }
 });
 
 export const updateVeendorServvice = CatchErrorFunc(async (req:Request, res:Response) => {
+   const user = req.user;
+   if(user){
+     console.log(user.foodType.length)
+       if(user.foodType.length > 0){
+         const updateService = await VendorModel.findByIdAndUpdate(user._id, {
+            serviceAvailable: true
+         });
+         return res.status(200).json({
+            success: true,
+            updateService
+         })
+       }
+      throw new HandleError("unable to change user service status because there are no foods available on the system")
+   }else{
+      throw new HandleError("vendor details not found");
+   }
 
 });
