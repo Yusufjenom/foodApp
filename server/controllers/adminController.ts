@@ -12,13 +12,16 @@ import { SignToken, VerifyToken } from "../utility/SignToken";
 
 
 export const createVendor = CatchErrorFunc(async (req: Request, res: Response) => {
+    console.log(req.body)
     const { name, address, pincode, foodType, email, password, ownerName, phone } = <CreateVendorInput>req.body;
     const hashedPassword = await hashPassword(password);
+    console.log(hashedPassword)
     const vendor = await VendorModel.create({
         name, address, pincode,
-        foodType, password: hashedPassword, email, ownerName, phone, rating: 7, serviceAvailable: false, coverImages: []
+        foodType, password: hashedPassword, email, ownerName,
+         phone, rating: 7, serviceAvailable: false, coverImages: [],foods:[]
     });
-
+    console.log(vendor);
     res.status(201).json({
         success: true,
         vendor
