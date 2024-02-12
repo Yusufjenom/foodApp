@@ -4,5 +4,6 @@ export interface CreateFoodInputs{
     category: string,
     foodType: string,
     readyTime: number,
-    price: number
+    price: number,
+    rating: number
 }
