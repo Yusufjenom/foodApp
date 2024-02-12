@@ -5,6 +5,8 @@ import { VendorModel } from '../models/vendorModel';
 import { HandleError } from '../utility/error';
 import { ComfirmPassword } from '../utility/comfirmPassword';
 import { SignToken } from '../utility/SignToken';
+import { CreateFoodInputs } from '../dto/food.dto';
+import { FoodModel } from '../models/food';
 
 
 export const vendorLogin = CatchErrorFunc(async (req: Request, res: Response) => {
@@ -84,7 +86,23 @@ export const updateVeendorServvice = CatchErrorFunc(async (req:Request, res:Resp
 });
 
 export const createFood = CatchErrorFunc(async (req:Request, res:Response) => {
-   
+   const user = req.user;
+
+   if(user){
+      const vendor = await VendorModel.findById(user._id)
+      const {name, foodType, price, readyTime, category, description} = <CreateFoodInputs>req.body;
+      const createdFood = FoodModel.create({
+         name, foodType, price, description, readyTime, rating: 0, category,
+         vendorId: vendor?._id, images:['yus.jpg']
+      });
+
+      vendor?.foods.push(createdFood);
+      const result = await vendor?.save();
+      return res.status(200).json({
+         success: true,
+         result
+      })
+   }
 });
 
 export const getFood = CatchErrorFunc(async (req: Request, res: Response) => {
