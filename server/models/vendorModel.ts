@@ -12,7 +12,7 @@ interface VendorDocumennt extends Document{
     serviceAvailable: boolean;
     coverImages: [string];
     rating: number;
-    //foods: any
+    foods: any
 };
 
 const vendorSchema = new mongoose.Schema({
@@ -61,10 +61,10 @@ const vendorSchema = new mongoose.Schema({
         type: Number,
         //required: true
     },
-    foods:{
+    foods:[{
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'food'
-    },
+    }],
 }, {timestamps: true, toJSON:{
     transform(doc, ret){
         delete ret.password
