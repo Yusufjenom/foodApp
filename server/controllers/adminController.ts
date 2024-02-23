@@ -31,7 +31,7 @@ export const createVendor = CatchErrorFunc(async (req: Request, res: Response) =
 export const getVendors = CatchErrorFunc(async (req: Request, res: Response) => {
     const vendors = await VendorModel.find().sort({ createdAt: -1 });
     if (vendors.length === 0) {
-        throw new HandleError("sorry no record found");
+        throw new HandleError("sorry no record found", 404);
     }
     res.status(200).json({
         success: true,
@@ -75,9 +75,9 @@ export const loginnAdmin = CatchErrorFunc(async (req: Request, res: Response) =>
             user
            });
         }else{
-            throw new HandleError("invalid password");
+            throw new HandleError("invalid password", 400);
         }
     }else{
-        throw new HandleError("invalid email");
+        throw new HandleError("invalid email", 400);
     }
 });
