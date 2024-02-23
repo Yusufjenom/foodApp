@@ -28,10 +28,10 @@ export const vendorLogin = CatchErrorFunc(async (req: Request, res: Response) =>
             //vendor
         })
      }else{
-        throw new HandleError("invalid password")
+        throw new HandleError("invalid password", 400)
      }
    }else{
-    throw new HandleError("invalid email")
+    throw new HandleError("invalid email", 400)
    }
 });
 
@@ -45,7 +45,7 @@ export const getVendorProfile = CatchErrorFunc(async (req:Request, res:Response)
          vendor
       })
     }else{
-      throw new HandleError("vendor information not found");
+      throw new HandleError("vendor information not found", 404);
     }
 });
 
@@ -61,7 +61,7 @@ export const updateVVendorProfile = CatchErrorFunc(async (req:Request, res:Respo
          vendor
       })
     }else{
-      throw new HandleError("vendor details not found");
+      throw new HandleError("vendor details not found", 404);
     }
 });
 
@@ -78,9 +78,9 @@ export const updateVeendorServvice = CatchErrorFunc(async (req:Request, res:Resp
             updateService
          })
        }
-      throw new HandleError("unable to change user service status because there are no foods available on the system")
+      throw new HandleError("unable to change user service status because there are no foods available on the system", 404)
    }else{
-      throw new HandleError("vendor details not found");
+      throw new HandleError("vendor details not found", 404);
    }
 
 });
