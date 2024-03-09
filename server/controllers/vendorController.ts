@@ -90,12 +90,13 @@ export const createFood = CatchErrorFunc(async (req:Request, res:Response) => {
 
    if(user){
       const vendor = await VendorModel.findById(user._id)
+      console.log(vendor)
       const {name, foodType, price, readyTime, category, description} = <CreateFoodInputs>req.body;
-      const createdFood = FoodModel.create({
+      const createdFood = await FoodModel.create({
          name, foodType, price, description, readyTime, rating: 0, category,
          vendorId: vendor?._id, images:['yus.jpg']
       });
-
+      console.log(createdFood)
       vendor?.foods.push(createdFood);
       const result = await vendor?.save();
       return res.status(200).json({
@@ -106,5 +107,16 @@ export const createFood = CatchErrorFunc(async (req:Request, res:Response) => {
 });
 
 export const getFood = CatchErrorFunc(async (req: Request, res: Response) => {
-
+     const user = req.user;
+     if(user){
+      const foods = await FoodModel.find({vendorId: user._id})
+      if(foods !== null){
+         return res.json(foods)
+      }else{
+         return res.status(404).json({
+            success: false,
+            message:" food information not found"
+         })
+      }
+     }
 });
