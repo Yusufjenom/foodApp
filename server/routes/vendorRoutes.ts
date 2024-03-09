@@ -5,7 +5,8 @@ import {
     getVendorProfile,
     updateVVendorProfile,
     updateVeendorServvice,
-    vendorLogin
+    vendorLogin,
+    updateVendorProfilePhoto
 } from '../controllers/vendorController';
 import { Authenticate } from '../middlewares/authMiddlware';
 import multer from 'multer';
@@ -31,6 +32,8 @@ vendorRouter.use(Authenticate)
 vendorRouter.get('/profile', getVendorProfile);
 
 vendorRouter.patch('/profile', updateVVendorProfile);
+
+vendorRouter.patch('/cover-image',images, updateVendorProfilePhoto)
 
 vendorRouter.patch('/service', updateVeendorServvice);
 
