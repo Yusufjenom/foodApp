@@ -3,12 +3,14 @@ import dotenv from 'dotenv';
 import {connectToDb} from './database/db';
 import { adminRoute, vendorRoute } from './routes';
 import { ErrorHandler } from './middlewares/ErrorHandler';
+import path from 'path';
 
 dotenv.config();
 const app = express();
 const port = 8080;
 
 app.use(express.urlencoded({extended: true}));
+app.use(express.static(path.join(__dirname, 'images')));
 app.use(express.json());
 app.use(adminRoute);
 app.use(vendorRoute);
