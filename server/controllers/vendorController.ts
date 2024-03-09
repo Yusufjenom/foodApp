@@ -65,6 +65,23 @@ export const updateVVendorProfile = CatchErrorFunc(async (req:Request, res:Respo
     }
 });
 
+export const updateVendorProfilePhoto = CatchErrorFunc(async (req:Request, res: Response) => {
+   const user = req.user;
+   if(user){
+      const vendor = await VendorModel.findById(user._id);
+      if(vendor){
+         const files = req.files as [Express.Multer.File]
+         const images = files.map((file: Express.Multer.File) => file.filename);
+         vendor.coverImages.push(...images);
+         const result = await vendor.save()
+         return res.status(200).json({
+            success: true,
+            result
+         })
+      }
+   }
+})
+
 export const updateVeendorServvice = CatchErrorFunc(async (req:Request, res:Response) => {
    const user = req.user;
    if(user){
