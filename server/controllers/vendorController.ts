@@ -92,9 +92,11 @@ export const createFood = CatchErrorFunc(async (req:Request, res:Response) => {
       const vendor = await VendorModel.findById(user._id)
       console.log(vendor)
       const {name, foodType, price, readyTime, category, description} = <CreateFoodInputs>req.body;
+      const files = req.files as [Express.Multer.File];
+      const images = files.map((file: Express.Multer.File) => file.filename);
       const createdFood = await FoodModel.create({
          name, foodType, price, description, readyTime, rating: 0, category,
-         vendorId: vendor?._id, images:['yus.jpg']
+         vendorId: vendor?._id, images
       });
       console.log(createdFood)
       vendor?.foods.push(createdFood);
