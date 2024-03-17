@@ -2,6 +2,7 @@ import { VendorPayload } from "../dto/vendor.dto";
 import jwt from 'jsonwebtoken';
 import {Request, Response, NextFunction} from 'express'
 import { AuthPayload } from "../dto/auth.dto";
+import { UserPayload } from "../dto/user.dto";
 
 const period: number = 60 * 60 * 24
 
@@ -16,7 +17,7 @@ export async function SignToken(payload: VendorPayload) {
 };
 
 
-export async function generateUserSignedPayload(payload: AuthPayload){
+export async function generateUserSignedPayload(payload: UserPayload){
   try{
    const token = await jwt.sign(payload, "secret", {expiresIn: period});
    return token;
