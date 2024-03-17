@@ -1,33 +1,67 @@
-import express, {Request, Response, NextFunction} from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { CatchErrorFunc } from '../utility/CatchErrorFunc';
-import {plainToClass} from 'class-transformer'
-import {validate} from 'class-validator';
+import { plainToClass } from 'class-transformer'
+import { validate } from 'class-validator';
 import { CreateUserInputs } from '../dto/user.dto';
+import { HandleError } from '../utility/error';
+import { hashPassword } from '../utility/hashPassword';
+import { UserModel } from '../models/userModel';
+import { genOTP } from '../utility/generateOTP';
 
 
 
-export const userSignp = CatchErrorFunc(async (req:Request, res:Response) => {
+export const userSignp = CatchErrorFunc(async (req: Request, res: Response) => {
 
- const userInputs = plainToClass(CreateUserInputs, req.body);
-const inputErrors = validate(userInputs, {validationError: {target: true}});
+    const userInputs = plainToClass(CreateUserInputs, req.body);
+    const inputErrors = await validate(userInputs, { validationError: { target: true } });
+    if (inputErrors.length > 0) {
+        throw new HandleError(inputErrors, 400);
+    } else {
+        const { email, phone, password } = userInputs;
+        const hashedPassword = await hashPassword(password);
+        const {otp, expiry} = await genOTP();
+        const otp_expiry = new Date();
+        console.log(otp, expiry);
+        const newUser = await UserModel.create({
+            email,
+            password: hashedPassword,
+            otp,
+            otp_expiry: expiry,
+            firstname: "",
+            lastname: "",
+            address: "",
+            phone,
+            verified: false,
+            lat: 0,
+            lon: 0
+        });
+
+        if(newUser){
+            //send OTP to user
+
+            //generate the signature
+
+            //send response back to the user
+        }
+    }
 });
 
-export const userLogin = CatchErrorFunc(async (req:Request, res:Response) => {
+export const userLogin = CatchErrorFunc(async (req: Request, res: Response) => {
 
 });
 
-export const verifyUser = CatchErrorFunc(async (req:Request, res:Response) => {
+export const verifyUser = CatchErrorFunc(async (req: Request, res: Response) => {
 
 });
 
-export const requestUserOTP = CatchErrorFunc(async (req:Request, res:Response) => {
+export const requestUserOTP = CatchErrorFunc(async (req: Request, res: Response) => {
 
 });
 
-export const getUserProfile = CatchErrorFunc(async (req:Request, res:Response) => {
+export const getUserProfile = CatchErrorFunc(async (req: Request, res: Response) => {
 
 });
 
-export const updateUserProfile = CatchErrorFunc(async (req:Request, res:Response) => {
+export const updateUserProfile = CatchErrorFunc(async (req: Request, res: Response) => {
 
 });
