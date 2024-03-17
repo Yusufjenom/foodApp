@@ -10,6 +10,4 @@ export class CreateUserInputs{
 
     @Length(6, 12)
     password: string;
-
-
 };
