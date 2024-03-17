@@ -11,3 +11,9 @@ export class CreateUserInputs{
     @Length(6, 12)
     password: string;
 };
+
+export interface UserPayload{
+   _id: string;
+   email: string;
+   verified: boolean
+};
