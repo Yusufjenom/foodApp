@@ -15,6 +15,17 @@ export async function SignToken(payload: VendorPayload) {
 
 };
 
+
+export async function generateUserSignedPayload(payload: AuthPayload){
+  try{
+   const token = await jwt.sign(payload, "secret", {expiresIn: period});
+   return token;
+  }
+  catch(err: any){
+    console.log(err.message)
+  }
+};
+
 export async function VerifyToken(token: string) {
     try {
         const verified = await jwt.verify(token, "secret");
