@@ -26,4 +26,4 @@ clientShoppingRouter.get('/restaurant/:id', getRestaurantById);
 
 
 
-export default clientShoppingRouter;
+export {clientShoppingRouter as clientShoppingRoute};
