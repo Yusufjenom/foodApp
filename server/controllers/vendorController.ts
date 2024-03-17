@@ -132,10 +132,7 @@ export const getFood = CatchErrorFunc(async (req: Request, res: Response) => {
       if(foods !== null){
          return res.json(foods)
       }else{
-         return res.status(404).json({
-            success: false,
-            message:" food information not found"
-         })
+         throw new HandleError("food not found", 404);
       }
      }
 });
