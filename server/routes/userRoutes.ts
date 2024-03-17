@@ -7,6 +7,7 @@ import {
     requestUserOTP,
     updateUserProfile
 } from '../controllers/userController';
+import {AuthenticatUser} from '../middlewares/authMiddlware';
 
 const userRouter = express.Router();
 
@@ -16,6 +17,8 @@ userRouter.post('/signup-customer', userSignp);
 /** Login  */
 userRouter.post('/login-customer', userLogin);
 
+
+userRouter.use(AuthenticatUser);
 /**verify customer account*/
 userRouter.patch('/verify-customer', verifyUser);
 
