@@ -39,16 +39,15 @@ export const userSignp = CatchErrorFunc(async (req: Request, res: Response) => {
         });
 
         if (newUser) {
-
             //send OTP to user
-            await onRequestOTP(otp, phone);
+            // await onRequestOTP(otp, phone);
 
             //generate the signature
-             const signature = generateUserSignedPayload({
+            const signature = await generateUserSignedPayload({
                 _id: newUser._id,
                 email: newUser.email,
                 verified: newUser.verified
-             })
+            });
 
             //send response back to the user
             res.status(201).json({
@@ -57,7 +56,7 @@ export const userSignp = CatchErrorFunc(async (req: Request, res: Response) => {
                 verified: newUser.verified,
                 email: newUser.email
             })
-        }else{
+        } else {
             throw new HandleError("an error occured during the signup process", 400);
         }
     }
@@ -68,7 +67,37 @@ export const userLogin = CatchErrorFunc(async (req: Request, res: Response) => {
 });
 
 export const verifyUser = CatchErrorFunc(async (req: Request, res: Response) => {
+    const { otp } = req.body;
+    const user = req.user;
+   
+    if (user) {
+        const profile = await UserModel.findById(user._id);
+        
+        if (profile) {
+            if (profile.otp === Number(otp) && profile.otp_expiry >= new Date()) {
+                profile.verified = true;
 
+                const updateedUserResponse = await profile.save();
+
+                //generate signature
+                const signature = await generateUserSignedPayload({
+                    _id: updateedUserResponse._id,
+                    email: updateedUserResponse.email,
+                    verified: updateedUserResponse.verified
+                });
+
+                res.status(200).json({
+                    success: true,
+                    signature,
+                    verified: updateedUserResponse.verified,
+                    email: updateedUserResponse.email
+
+                })
+            } else {
+                throw new HandleError("incorrect or expired otp", 400)
+            }
+        }
+    }
 });
 
 export const requestUserOTP = CatchErrorFunc(async (req: Request, res: Response) => {
