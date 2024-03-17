@@ -7,6 +7,8 @@ import { HandleError } from '../utility/error';
 import { hashPassword } from '../utility/hashPassword';
 import { UserModel } from '../models/userModel';
 import { genOTP } from '../utility/generateOTP';
+import { onRequestOTP } from '../utility/notification';
+import { generateUserSignedPayload } from '../utility/SignToken';
 
 
 
@@ -19,9 +21,9 @@ export const userSignp = CatchErrorFunc(async (req: Request, res: Response) => {
     } else {
         const { email, phone, password } = userInputs;
         const hashedPassword = await hashPassword(password);
-        const {otp, expiry} = await genOTP();
+        const { otp, expiry } = await genOTP();
         const otp_expiry = new Date();
-        console.log(otp, expiry);
+
         const newUser = await UserModel.create({
             email,
             password: hashedPassword,
@@ -36,12 +38,27 @@ export const userSignp = CatchErrorFunc(async (req: Request, res: Response) => {
             lon: 0
         });
 
-        if(newUser){
+        if (newUser) {
+
             //send OTP to user
+            await onRequestOTP(otp, phone);
 
             //generate the signature
+             const signature = generateUserSignedPayload({
+                _id: newUser._id,
+                email: newUser.email,
+                verified: newUser.verified
+             })
 
             //send response back to the user
+            res.status(201).json({
+                success: true,
+                signature,
+                verified: newUser.verified,
+                email: newUser.email
+            })
+        }else{
+            throw new HandleError("an error occured during the signup process", 400);
         }
     }
 });
