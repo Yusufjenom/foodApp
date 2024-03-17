@@ -48,3 +48,18 @@ export const validateToken = async (req:Request) => {
    }
    return false;
 }
+
+export const validateUserToken = async (req: Request) => {
+    try{
+        const token = req.get('Authorization');
+        if(token){
+            const payload = await jwt.verify(token.split(' ')[1], "secret") as AuthPayload;
+            req.user = payload;
+            return true
+        }
+        return false
+    }
+    catch(err: any){
+        console.log(err.message)
+    }
+};
