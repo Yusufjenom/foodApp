@@ -86,9 +86,12 @@ export const updateVeendorServvice = CatchErrorFunc(async (req:Request, res:Resp
    const user = req.user;
    if(user){
      console.log(user.foodType.length)
+     //console.log(user);
+     const vendor = await VendorModel.findById(user._id);
+   //   console.log(vendor)
        if(user.foodType.length > 0){
          const updateService = await VendorModel.findByIdAndUpdate(user._id, {
-            serviceAvailable: true
+            serviceAvailable: !vendor?.serviceAvailable
          });
          return res.status(200).json({
             success: true,
