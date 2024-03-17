@@ -10,7 +10,7 @@ interface UserDocumennt extends Document{
     phone: string;
     verified: boolean;
     otp: number;
-    otp_expiry: number,
+    otp_expiry: Date,
     lat: number;
     lon: number;
 };
