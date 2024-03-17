@@ -42,7 +42,6 @@ export const getFoodIn30Min = CatchErrorFunc(async (req: Request, res: Response)
   const {pincode} = req.params;
   const result = await VendorModel.find({pincode, serviceAvailable: false})
   .populate("foods")
-
   if(result.length > 0){
     let foodResult: any = [];
     result.map(vendor => {
