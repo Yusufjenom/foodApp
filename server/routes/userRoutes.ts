@@ -4,28 +4,29 @@ import {
     userSignp,
     userLogin,
     verifyUser,
-    requestUserOTP
+    requestUserOTP,
+    updateUserProfile
 } from '../controllers/userController';
 
 const userRouter = express.Router();
 
 /** signup */
-userRouter.post('/signup-customer');
+userRouter.post('/signup-customer', userSignp);
 
 /** Login  */
-userRouter.post('/login-customer');
+userRouter.post('/login-customer', userLogin);
 
 /**verify customer account*/
-userRouter.patch('/verify-customer');
+userRouter.patch('/verify-customer', verifyUser);
 
 /** requeesting OTP*/
-userRouter.get('/otp');
+userRouter.get('/otp', requestUserOTP);
 
 /**get Profile */
-userRouter.get('/customer-profile');
+userRouter.get('/customer-profile', getUserProfile);
 
 /**update Profile */
-userRouter.patch('/update-customer-profile');
+userRouter.patch('/update-customer-profile', updateUserProfile);
 
 /** cart*/
 
