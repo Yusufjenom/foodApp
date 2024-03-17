@@ -75,5 +75,16 @@ export const searchForFood = CatchErrorFunc(async (req: Request, res: Response) 
 });
 
 export const getRestaurantById = CatchErrorFunc(async (req: Request, res: Response) => {
+    const {id} = req.params;
+    const result = await VendorModel.findById(id)
+    .populate("foods")
 
+    if(result){
+      res.status(200).json({
+        success: true,
+        result
+      })
+    }else{
+        throw new HandleError("Data not found", 404);
+    }
 });
