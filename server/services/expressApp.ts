@@ -1,6 +1,5 @@
 import express, { Application } from 'express';
-import { adminRoute, vendorRoute,  } from '../routes';
-import clientShoppingRouter from '../routes/clientShoppingRoute';
+import { adminRoute, vendorRoute, clientShoppingRoute } from '../routes';
 import { ErrorHandler } from '../middlewares/ErrorHandler';
 import path from 'path';
 
@@ -10,7 +9,7 @@ export default async (app: Application) => {
     app.use(express.json());
     app.use(adminRoute);
     app.use(vendorRoute);
-    app.use(clientShoppingRouter);
+    app.use(clientShoppingRoute);
     app.use(ErrorHandler);
 
     return app;
