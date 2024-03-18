@@ -54,7 +54,8 @@ export const userSignp = CatchErrorFunc(async (req: Request, res: Response) => {
                 success: true,
                 signature,
                 verified: newUser.verified,
-                email: newUser.email
+                email: newUser.email,
+                otp
             })
         } else {
             throw new HandleError("an error occured during the signup process", 400);
