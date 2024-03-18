@@ -22,7 +22,7 @@ export const userSignp = CatchErrorFunc(async (req: Request, res: Response) => {
         const { email, phone, password } = userInputs;
         const hashedPassword = await hashPassword(password);
         const { otp, expiry } = await genOTP();
-        const otp_expiry = new Date();
+        
 
         const newUser = await UserModel.create({
             email,
