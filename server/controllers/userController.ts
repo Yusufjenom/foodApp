@@ -19,7 +19,7 @@ export const userSignp = CatchErrorFunc(async (req: Request, res: Response) => {
     if (inputErrors.length > 0) {
         throw new HandleError(inputErrors, 400);
     } else {
-        const { email, phone, password } = userInputs;
+        const { email, phone, password, address, firstname, lastname } = userInputs;
         const hashedPassword = await hashPassword(password);
         const { otp, expiry } = await genOTP();
         
@@ -29,9 +29,9 @@ export const userSignp = CatchErrorFunc(async (req: Request, res: Response) => {
             password: hashedPassword,
             otp,
             otp_expiry: expiry,
-            firstname: "",
-            lastname: "",
-            address: "",
+            firstname,
+            lastname,
+            address,
             phone,
             verified: false,
             lat: 0,
