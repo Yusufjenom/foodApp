@@ -10,6 +10,12 @@ export class CreateUserInputs{
 
     @Length(6, 12)
     password: string;
+
+    firstname: string;
+
+    lastname: string;
+
+    address: string;
 };
 
 export interface UserPayload{
