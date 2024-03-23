@@ -18,18 +18,18 @@ userRouter.post('/signup-customer', userSignp);
 userRouter.post('/login-customer', userLogin);
 
 
-userRouter.use(AuthenticatUser);
+// userRouter.use(AuthenticatUser);
 /**verify customer account*/
-userRouter.patch('/verify-customer', verifyUser);
+userRouter.patch('/verify-customer',AuthenticatUser, verifyUser);
 
 /** requeesting OTP*/
-userRouter.get('/otp', requestUserOTP);
+userRouter.get('/otp',AuthenticatUser, requestUserOTP);
 
 /**get Profile */
-userRouter.get('/customer-profile', getUserProfile);
+userRouter.get('/customer-profile',AuthenticatUser, getUserProfile);
 
 /**update Profile */
-userRouter.patch('/update-customer-profile', updateUserProfile);
+userRouter.patch('/update-customer-profile',AuthenticatUser, updateUserProfile);
 
 /** cart*/
 
