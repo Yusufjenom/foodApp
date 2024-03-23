@@ -27,18 +27,18 @@ const images = multer({storage: imagesStorage}).array('images', 10)
 
 vendorRouter.post('/login-vendor', vendorLogin);
 
-vendorRouter.use(Authenticate)
+// vendorRouter.use(Authenticate)
 
-vendorRouter.get('/profile', getVendorProfile);
+vendorRouter.get('/profile',Authenticate, getVendorProfile);
 
-vendorRouter.patch('/profile', updateVVendorProfile);
+vendorRouter.patch('/profile',Authenticate, updateVVendorProfile);
 
-vendorRouter.patch('/cover-image',images, updateVendorProfilePhoto)
+vendorRouter.patch('/cover-image',Authenticate, images, updateVendorProfilePhoto)
 
-vendorRouter.patch('/service', updateVeendorServvice);
+vendorRouter.patch('/service',Authenticate, updateVeendorServvice);
 
-vendorRouter.post('/food', images,  createFood);
+vendorRouter.post('/food',Authenticate, images,  createFood);
 
-vendorRouter.get('/foods', getFood);
+vendorRouter.get('/foods',Authenticate, getFood);
 
 export { vendorRouter as vendorRoute };
