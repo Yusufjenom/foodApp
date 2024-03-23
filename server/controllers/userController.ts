@@ -2,13 +2,14 @@ import express, { Request, Response, NextFunction } from 'express';
 import { CatchErrorFunc } from '../utility/CatchErrorFunc';
 import { plainToClass } from 'class-transformer'
 import { validate } from 'class-validator';
-import { CreateUserInputs } from '../dto/user.dto';
+import { CreateUserInputs, UserLoginInputs } from '../dto/user.dto';
 import { HandleError } from '../utility/error';
 import { hashPassword } from '../utility/hashPassword';
 import { UserModel } from '../models/userModel';
 import { genOTP } from '../utility/generateOTP';
 import { onRequestOTP } from '../utility/notification';
 import { generateUserSignedPayload } from '../utility/SignToken';
+//import { UserLoginInputs } from '../dto/user.dto'; 
 
 
 
@@ -64,7 +65,12 @@ export const userSignp = CatchErrorFunc(async (req: Request, res: Response) => {
 });
 
 export const userLogin = CatchErrorFunc(async (req: Request, res: Response) => {
+  const loginInputs = plainToClass(UserLoginInputs, req.body);
+  const loginErrors = await validate(loginInputs, {validationError: {target: false}});
 
+  if(loginErrors){
+    throw new HandleError(loginErrors, 400)
+  }
 });
 
 export const verifyUser = CatchErrorFunc(async (req: Request, res: Response) => {
