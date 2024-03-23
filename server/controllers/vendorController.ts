@@ -37,7 +37,7 @@ export const vendorLogin = CatchErrorFunc(async (req: Request, res: Response) =>
 
 export const getVendorProfile = CatchErrorFunc(async (req:Request, res:Response) => {
     const user = req.user;
-    //console.log(user)
+    console.log(user)
     if(user){
       const vendor = await VendorModel.findById(user._id)
       return res.status(200).json({
