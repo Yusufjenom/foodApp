@@ -9,6 +9,7 @@ import { UserModel } from '../models/userModel';
 import { genOTP } from '../utility/generateOTP';
 import { onRequestOTP } from '../utility/notification';
 import { generateUserSignedPayload } from '../utility/SignToken';
+import { ComfirmPassword } from '../utility/comfirmPassword';
 //import { UserLoginInputs } from '../dto/user.dto'; 
 
 
@@ -23,7 +24,7 @@ export const userSignp = CatchErrorFunc(async (req: Request, res: Response) => {
         const { email, phone, password, address, firstname, lastname } = userInputs;
         const hashedPassword = await hashPassword(password);
         const { otp, expiry } = await genOTP();
-        
+
 
         const newUser = await UserModel.create({
             email,
@@ -65,21 +66,46 @@ export const userSignp = CatchErrorFunc(async (req: Request, res: Response) => {
 });
 
 export const userLogin = CatchErrorFunc(async (req: Request, res: Response) => {
-  const loginInputs = plainToClass(UserLoginInputs, req.body);
-  const loginErrors = await validate(loginInputs, {validationError: {target: false}});
+    const loginInputs = plainToClass(UserLoginInputs, req.body);
+    const loginErrors = await validate(loginInputs, { validationError: { target: false } });
+    if (loginErrors.length > 0) {
+        throw new HandleError(loginErrors, 400)
+    } else {
+        const { email, password } = loginInputs;
+        const user = await UserModel.findOne({ email });
 
-  if(loginErrors){
-    throw new HandleError(loginErrors, 400)
-  }
+        if (user) {
+            const isPassword = await ComfirmPassword(password, user.password);
+            if (isPassword) {
+                const token = await generateUserSignedPayload({
+                    _id: user._id,
+                    email: user.email,
+                    verified: user.verified
+                });
+
+                res.status(200).json({
+                    success: true,
+                    token,
+                    verified: user.verified,
+                    email: user.email
+                });
+
+            } else {
+                throw new HandleError("Invalid password", 400)
+            }
+        } else {
+            throw new HandleError("Invalid email address", 404)
+        }
+    }
 });
 
 export const verifyUser = CatchErrorFunc(async (req: Request, res: Response) => {
     const { otp } = req.body;
-    const user = req.user;
-   
+    const user = req.userCustomer;
+
     if (user) {
         const profile = await UserModel.findById(user._id);
-        
+
         if (profile) {
             if (profile.otp === Number(otp) && profile.otp_expiry >= new Date()) {
                 profile.verified = true;
