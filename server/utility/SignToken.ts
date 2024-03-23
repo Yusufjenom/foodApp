@@ -40,9 +40,10 @@ export async function VerifyToken(token: string) {
 
 export const validateToken = async (req:Request) => {
    const token = req.get('Authorization');
-   //console.log(token);
+   console.log(token);
    if(token){
     const payload = await jwt.verify(token.split(' ')[1], "secret", ) as AuthPayload;
+    console.log(payload)
     req.user = payload;
     return true
    }
@@ -53,8 +54,8 @@ export const validateUserToken = async (req: Request) => {
     try{
         const token = req.get('Authorization');
         if(token){
-            const payload = await jwt.verify(token.split(' ')[1], "secret") as AuthPayload;
-            req.user = payload;
+            const payload = await jwt.verify(token.split(' ')[1], "secret") as UserPayload;
+            req.userCustomer = payload;
             return true
         }
         return false
