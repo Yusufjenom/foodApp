@@ -2,6 +2,7 @@ import { NextFunction ,Request, Response,} from "express";
 import { AuthPayload } from "../dto/auth.dto";
 import { validateToken, validateUserToken } from "../utility/SignToken";
 import { HandleError } from "../utility/error";
+import { UserPayload } from "../dto/user.dto";
 
 
 declare global{
@@ -11,6 +12,16 @@ declare global{
         }
     }
 };
+
+declare global{
+    namespace Express{
+        interface Request{
+            userCustomer?: UserPayload
+        }
+    }
+};
+
+
 
 export const Authenticate = async (req: Request, res:Response, next:NextFunction) => {
   const validate = await validateToken(req);
