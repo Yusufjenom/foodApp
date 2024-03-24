@@ -33,3 +33,20 @@ export interface UserPayload{
    verified: boolean
 };
 
+export class EditProfileInput{
+    @IsEmail()
+    email: string;
+
+    @Length(7, 12)
+    phone: string;
+
+    @Length(6, 12)
+    password: string;
+
+    firstname: string;
+
+    lastname: string;
+
+    address: string;
+};
+
