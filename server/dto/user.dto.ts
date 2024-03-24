@@ -1,7 +1,7 @@
-import {IsEmail, IsEmpty, Length} from'class-validator';
+import { IsEmail, IsEmpty, Length } from 'class-validator';
 
 
-export class CreateUserInputs{
+export class CreateUserInputs {
     @IsEmail()
     email: string;
 
@@ -18,7 +18,7 @@ export class CreateUserInputs{
     address: string;
 };
 
-export class UserLoginInputs{
+export class UserLoginInputs {
     @IsEmail()
     email: string;
 
@@ -27,26 +27,28 @@ export class UserLoginInputs{
 
 };
 
-export interface UserPayload{
-   _id: string;
-   email: string;
-   verified: boolean
+export interface UserPayload {
+    _id: string;
+    email: string;
+    verified: boolean
 };
 
-export class EditProfileInput{
-    @IsEmail()
-    email: string;
+export class EditProfileInput {
+    // @IsEmail()
+    // email: string;
 
-    @Length(7, 12)
-    phone: string;
+    // @Length(7, 12)
+    // phone: string;
 
-    @Length(6, 12)
-    password: string;
-
+    // @Length(6, 12)
+    // password: string;
+    @Length(1, 50)
     firstname: string;
 
+    @Length(1, 50)
     lastname: string;
 
+    @Length(1, 50)
     address: string;
 };
 
