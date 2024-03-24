@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import { CatchErrorFunc } from '../utility/CatchErrorFunc';
 import { plainToClass } from 'class-transformer'
 import { validate } from 'class-validator';
-import { CreateUserInputs, UserLoginInputs } from '../dto/user.dto';
+import { CreateUserInputs, EditProfileInput, UserLoginInputs } from '../dto/user.dto';
 import { HandleError } from '../utility/error';
 import { hashPassword } from '../utility/hashPassword';
 import { UserModel } from '../models/userModel';
@@ -134,11 +134,45 @@ export const verifyUser = CatchErrorFunc(async (req: Request, res: Response) => 
 });
 
 export const requestUserOTP = CatchErrorFunc(async (req: Request, res: Response) => {
+    const user = req.userCustomer;
+    if (user) {
+        const profile = await UserModel.findById(user._id);
 
+        if (profile) {
+            const { otp, expiry } = await genOTP();
+
+            profile.otp = otp;
+            profile.otp_expiry = expiry;
+
+            await profile.save();
+
+            //sned the otp
+            // await onRequestOTP(otp, profile.phone);
+
+            res.status(200).json({
+                success: true,
+                message: "OTP has been sent to your registereed phone number",
+                otp,
+                num: profile.phone
+            });
+        }
+    }
 });
 
 export const getUserProfile = CatchErrorFunc(async (req: Request, res: Response) => {
+    const user = req.userCustomer;
+    const profileInputs = plainToClass(EditProfileInput, req.body);
+    if (user) {
+      const profile = await UserModel.findById(user._id);
+      if(profile){
 
+
+      }else{
+        throw new HandleError("user not found", 404);
+      }
+    }else{
+        throw new HandleError('wrong credentials', 400);
+    }
 });
 
 export const updateUserProfile = CatchErrorFunc(async (req: Request, res: Response) => {
