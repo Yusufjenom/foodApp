@@ -179,14 +179,20 @@ export const getUserProfile = CatchErrorFunc(async (req: Request, res: Response)
 
 export const updateUserProfile = CatchErrorFunc(async (req: Request, res: Response) => {
     const user = req.userCustomer;
+    console.log(user)
+    console.log(req.body)
     const profileInputs = plainToClass(EditProfileInput, req.body);
+    console.log(profileInputs)
     const profileErrors = await validate(profileInputs, { validationError: { target: false } });
+    console.log(profileErrors)
     if (profileErrors.length > 0) {
         throw new HandleError(profileErrors, 400)
     } else {
         const {firstname, lastname, address} = profileInputs
         if (user) {
+            console.log(user)
             const profile = await UserModel.findById(user._id);
+            console.log(profile)
             if (profile) {
                profile.firstname = firstname;
                profile.lastname = lastname;
