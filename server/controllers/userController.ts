@@ -161,20 +161,48 @@ export const requestUserOTP = CatchErrorFunc(async (req: Request, res: Response)
 
 export const getUserProfile = CatchErrorFunc(async (req: Request, res: Response) => {
     const user = req.userCustomer;
-    const profileInputs = plainToClass(EditProfileInput, req.body);
-    if (user) {
-      const profile = await UserModel.findById(user._id);
-      if(profile){
+        if (user) {
+            const profile = await UserModel.findById(user._id);
+            if (profile) {
+               res.status(200).json({
+                success: true,
+                profile
+               })
 
-
-      }else{
-        throw new HandleError("user not found", 404);
-      }
-    }else{
-        throw new HandleError('wrong credentials', 400);
-    }
+            } else {
+                throw new HandleError("error in fetching user information", 404);
+            }
+        } else {
+            throw new HandleError('wrong credentials', 400);
+        }
 });
 
 export const updateUserProfile = CatchErrorFunc(async (req: Request, res: Response) => {
+    const user = req.userCustomer;
+    const profileInputs = plainToClass(EditProfileInput, req.body);
+    const profileErrors = await validate(profileInputs, { validationError: { target: false } });
+    if (profileErrors.length > 0) {
+        throw new HandleError(profileErrors, 400)
+    } else {
+        const {firstname, lastname, address} = profileInputs
+        if (user) {
+            const profile = await UserModel.findById(user._id);
+            if (profile) {
+               profile.firstname = firstname;
+               profile.lastname = lastname;
+               profile.address = address;
 
+               const updatedResult = await profile.save();
+               res.status(200).json({
+                success: true,
+                updatedResult
+               })
+
+            } else {
+                throw new HandleError("user not found", 404);
+            }
+        } else {
+            throw new HandleError('wrong credentials', 400);
+        }
+    }
 });
