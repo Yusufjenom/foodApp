@@ -7,6 +7,7 @@ import { hashPassword } from "../utility/hashPassword";
 import { AdminModel } from "../models/adminModel";
 import { ComfirmPassword } from "../utility/comfirmPassword";
 import { SignToken, VerifyToken } from "../utility/SignToken";
+import jwt from "jsonwebtoken";
 
 export const createVendor = CatchErrorFunc(
   async (req: Request, res: Response) => {
@@ -98,6 +99,9 @@ export const loginnAdmin = CatchErrorFunc(
       const correctPassword = await ComfirmPassword(password, user.password);
       if (correctPassword) {
         const signedAdminToken = await SignToken(user.id);
+        // const token = await jwt.sign({ id: user._id }, "secret", {
+        //   expiresIn: "1d",
+        // });
         console.log(signedAdminToken);
         return res.status(200).json({
           success: true,
